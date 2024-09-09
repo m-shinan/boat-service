@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mshinan
+      POSTGRES_USER: postgres
+      POSTGRES_DB: boatservice
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.0.10
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:mshinan@postgres:5432/boatservice
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # enable console
+      HASURA_GRAPHQL_ADMIN_SECRET: youradminsecret
+
+volumes:
+  postgres_data:
